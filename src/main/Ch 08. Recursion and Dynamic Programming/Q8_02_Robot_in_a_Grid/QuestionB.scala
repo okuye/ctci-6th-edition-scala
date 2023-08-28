@@ -1,0 +1,52 @@
+package Q8_02_Robot_in_a_Grid
+
+import scala.collection.mutable.{ArrayBuffer, HashSet}
+import CtCILibrary.AssortedMethods
+
+object QuestionB {
+
+  def getPath(maze: Array[Array[Boolean]]): Option[ArrayBuffer[Point]] = {
+    if (maze == null || maze.isEmpty) return None
+    val path = ArrayBuffer[Point]()
+    val failedPoints = HashSet[Point]()
+    if (getPath(maze, maze.length - 1, maze(0).length - 1, path, failedPoints)) {
+      Some(path)
+    } else {
+      None
+    }
+  }
+
+  def getPath(maze: Array[Array[Boolean]], row: Int, col: Int, path: ArrayBuffer[Point], failedPoints: HashSet[Point]): Boolean = {
+    if (col < 0 || row < 0 || !maze(row)(col)) {
+      return false
+    }
+
+    val p = Point(row, col)
+
+    if (failedPoints.contains(p)) {
+      return false
+    }
+
+    val isAtOrigin = (row == 0) && (col == 0)
+
+    if (isAtOrigin || getPath(maze, row, col - 1, path, failedPoints) || getPath(maze, row - 1, col, path, failedPoints)) {
+      path += p
+      true
+    } else {
+      failedPoints += p
+      false
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val size = 20
+    val maze = AssortedMethods.randomBooleanMatrix(size, size, 60)
+
+    AssortedMethods.printMatrix(maze)
+
+    getPath(maze) match {
+      case Some(path) => println(path.mkString(", "))
+      case None => println("No path found.")
+    }
+  }
+}
