@@ -58,6 +58,13 @@ object AssortedMethods {
     head
   }
 
+  def arrayToString(array: Any): String = array match {
+    case arr: Array[Int] => arr.mkString(" ")
+    case arr: Array[(Int, Int)] => arr.map(pair => s"${pair._1} ${pair._2}").mkString(" ")
+    case _ => "Unknown array type"
+  }
+
+
   def arrayToString(array: Array[Int]): String = {
     array.mkString(", ")
   }
